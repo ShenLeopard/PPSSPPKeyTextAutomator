@@ -55,7 +55,7 @@ voiced_map = {
     'ピ': 'ヒ゜',
     'プ': 'フ゜',
     'ペ': 'ヘ゜',
-    'ポ': 'ホ゜'
+    'ポ': 'ホ゜',
 }
 
 keyboard = {
@@ -141,10 +141,24 @@ def input_text(text):
             print(f"Character {char} not found in any language or page.")
             continue
         # 然後按照找到的字符位置進行操作
+        current_position = list(current_position)  # 將元組轉換為列表
         for _ in range(abs(target_language_index - current_language_index)):
+            # 檢查並更新當前位置
+            target_max_y = len(
+                keyboard[list(keyboard.keys())[target_language_index]][list(keyboard[current_language].keys())[0]]) - 1
+            target_max_x = len(
+                keyboard[list(keyboard.keys())[target_language_index]][list(keyboard[current_language].keys())[0]][
+                    0]) - 1
+            if current_position[0] > target_max_y:
+                current_position[0] = target_max_y
+            if current_position[1] > target_max_x:
+                current_position[1] = target_max_x
             print("換語言")
             press_key(0x51)
             current_language_index = target_language_index
+
+        current_position = tuple(current_position)  # 將列表轉換回元組
+
         for _ in range(abs(target_case_index - current_case_index)):
             print("翻頁")
             press_key(0x56)
@@ -167,6 +181,6 @@ def input_text(text):
 time.sleep(5)
 
 print("開始打字")
-text = replace_voiced("ロードオブアポカリプス")  # 替換濁音和半濁音
+text = replace_voiced("ガンガンいこうぜ！")  # 替換濁音和半濁音
 print(text)
 input_text(text)
